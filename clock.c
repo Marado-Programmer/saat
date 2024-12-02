@@ -15,24 +15,27 @@ int main(void) {
 
   SetTargetFPS(1);
 
-  printf("epoch: %d\n", (int)time(NULL));
-  int now = (int)time(NULL) % (60 * 60 * 24);
+  // Timestamp for 2 December 2024 13:59:59 = 1733147999
+  int timestamp = (int)time(NULL); // (int)time(NULL) for the real timestamp
+  int now = timestamp % (60 * 60 * 24);
 
-  int hour = now / (60 * 60);
-  float hour_angle = hour * (PI / 6) - (PI / 2);
-  int minute = (now % (60 * 60)) / 60;
-  float minute_angle = minute * (PI / 30) - (PI / 2);
-  int second = now % 60;
-  float second_angle = second * (PI / 30) - (PI / 2);
+  printf("timestamp: %d\n", timestamp);
+  printf("epoch: %d\n", now);
 
-  printf("epoch: %d\n%d:%d:%d\n", now, hour, minute, second);
+  // The hour angle shoud {PI / (60 * 60 * 6)} per second. - PI/2 for the start on the top.
+  // The minute angle shoud {PI / (30 * 60)} per second. - PI/2 for the start on the top.
+  // The second angle shoud {PI / 30} per second. - PI/2 for the start on the top.
+  float hour_angle = now * (PI / (60 * 60 * 6)) - (PI / 2);
+  float minute_angle = now * PI / (30 * 60) - (PI / 2);
+  float second_angle = now * (PI / 30) - (PI / 2);
 
   int center = INIT_SIDE / 2;
   Vector2 centerV = {.x = center, .y = center};
   Vector2 endV;
 
-  while (!WindowShouldClose()) {
-    hour_angle += 1.0 / (60 * 60 * 6);
+  while (!WindowShouldClose())
+  {
+    hour_angle += PI / (60 * 60 * 6);
     minute_angle += PI / (30 * 60);
     second_angle += PI / 30;
 
